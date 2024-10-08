@@ -3,6 +3,7 @@ package com.example.teamcity.api;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.models.Roles;
+import com.example.teamcity.api.models.User;
 import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
@@ -70,11 +71,16 @@ public class BuildTypeTest extends BaseApiTest {
         var project_1 = superUserCheckRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
         var project_2 = superUserCheckRequests.<Project>getRequest(PROJECTS).create(generate(Project.class));
         var buildTypeProject_2 = generate(Arrays.asList(project_2), BuildType.class);
+        var userForProject_1 = testData.getUser();
+        var userForProject_2 = generate(User.class);
 
-        testData.getUser().setRoles(generate(Roles.class, "PROJECT_ADMIN", "p:" + project_1.getId()));
-        superUserCheckRequests.getRequest(USERS).create(testData.getUser());
+        userForProject_1.setRoles(generate(Roles.class, "PROJECT_ADMIN", "p:" + project_1.getId()));
+        superUserCheckRequests.getRequest(USERS).create(userForProject_1);
 
-        new UncheckedRequests(Specifications.authSpec(testData.getUser()))
+        userForProject_2.setRoles(generate(Roles.class, "PROJECT_ADMIN", "p:" + project_2.getId()));
+        superUserCheckRequests.getRequest(USERS).create(userForProject_2);
+
+        new UncheckedRequests(Specifications.authSpec(userForProject_1))
                 .getRequest(BUILD_TYPES)
                 .create(buildTypeProject_2)
                 .then()
