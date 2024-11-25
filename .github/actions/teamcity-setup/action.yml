@@ -67,7 +67,7 @@ runs:
 
     - name: Make mvnw and all scripts executable
       shell: bash
-      run: chmod -R +x ./
+      run: chmod +x ./mvnw
 
     - name: Setup TeamCity server
       shell: bash
