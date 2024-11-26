@@ -23,6 +23,10 @@ public class CreateProjectTest extends BaseUiTest {
                 .createForm(REPO_URL)
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
 
+        var foundProjects = ProjectsPage.open()
+                .getProjects().stream()
+                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
+
         var createdProject = superUserCheckRequests.<Project>getRequest(PROJECTS)
                 .read("name:" + testData.getProject().getName());
 
@@ -30,10 +34,6 @@ public class CreateProjectTest extends BaseUiTest {
 
         ProjectPage.open(createdProject.getId())
                 .title.shouldHave(Condition.exactText(testData.getProject().getName()));
-
-        var foundProjects = ProjectsPage.open()
-                .getProjects().stream()
-                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
 
         softy.assertTrue(foundProjects);
     }
