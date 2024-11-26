@@ -31,7 +31,7 @@ jobs:
     environment: 'prod'
     steps:
       - name: Approve backend and frontend to production
-        run: Approved to production
+        run: echo Approved to production
 
   # Деплой фронтенда и бекенда на прод
   deploy-prod:
