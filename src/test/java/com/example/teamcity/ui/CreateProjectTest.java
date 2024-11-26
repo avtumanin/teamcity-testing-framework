@@ -2,6 +2,7 @@ package com.example.teamcity.ui;
 
 import com.codeborne.selenide.Condition;
 import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.api.generators.TestDataStorage;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.ProjectsPage;
@@ -23,8 +24,9 @@ public class CreateProjectTest extends BaseUiTest {
         CreateProjectPage.open("_Root")
                 .createForm(REPO_URL)
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
+        TestDataStorage.getStorage().addCreatedEntity(PROJECTS, testData.getProject());
 
-        var createdProject = superUserCheckRequests.<Project>getRequest(Endpoint.PROJECTS)
+        var createdProject = superUserCheckRequests.<Project>getRequest(PROJECTS)
                 .read("name:" + testData.getProject().getName());
 
         softy.assertNotNull(createdProject);
